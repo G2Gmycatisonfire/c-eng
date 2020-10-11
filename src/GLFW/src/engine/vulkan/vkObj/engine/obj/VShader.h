@@ -11,10 +11,11 @@
 #include <vkObj/instance/pipeline/VPipeline.h>
 #include <vkObj/instance/pipeline/shader/VShaderModule.h>
 #include <vkObj/instance/pipeline/shader/VShaderCompiler.h>
+#include <VComponent.h>
 
 namespace engine {
 
-    class VShader {
+    class VShader : public VComponent {
     private:
         //// private variables
         const VLogicalDevice                              * _pLogicalDevice         {nullptr};
@@ -34,7 +35,7 @@ namespace engine {
         //// public variables
 
         //// public functions
-        VShader() noexcept = default;
+        VShader() noexcept : VComponent( VComponent::Type::SHADER ) { }
 
         [[nodiscard]] const VPipeline & getPipeline () const noexcept {
             return this->_pipeline;

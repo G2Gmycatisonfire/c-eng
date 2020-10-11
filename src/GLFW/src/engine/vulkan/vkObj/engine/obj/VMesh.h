@@ -10,10 +10,11 @@
 #include <vkObj/instance/pipeline/command/VCommandPool.h>
 #include <vkObj/instance/pipeline/shader/input/VVertexBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VIndexBuffer.h>
+#include <VComponent.h>
 
 namespace engine {
 
-    class VMesh {
+    class VMesh : public VComponent {
     private:
         //// private variables
         const VCommandPool            * _pCommandPool           {nullptr};
@@ -27,7 +28,7 @@ namespace engine {
         //// public variables
 
         //// public functions
-        VMesh() noexcept = default;
+        VMesh() noexcept : VComponent( VComponent::Type::MESH ) { }
 
         [[nodiscard]] VulkanResult setup(
                 const VCommandPool &,

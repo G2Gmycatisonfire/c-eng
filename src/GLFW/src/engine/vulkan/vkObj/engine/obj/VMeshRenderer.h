@@ -11,10 +11,11 @@
 #include <VDescriptorSet.h>
 #include <VShader.h>
 #include <VCommandPool.h>
+#include <VComponent.h>
 
 namespace engine {
 
-    class VMeshRenderer {
+    class VMeshRenderer : public VComponent {
     private:
         //// private variables
         const VLogicalDevice                                          * _pLogicalDevice       {nullptr};
@@ -35,7 +36,7 @@ namespace engine {
         //// public variables
 
         //// public functions
-        VMeshRenderer () noexcept = default;
+        VMeshRenderer () noexcept : VComponent( VComponent::Type::MESH_RENDERER ) { }
 
         [[nodiscard]] const VLogicalDevice * getLogicalDevicePtr () const noexcept {
             return this->_pLogicalDevice;

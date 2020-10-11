@@ -166,7 +166,8 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/engine/obj/VShader.cpp
             src/GLFW/src/engine/vulkan/vkObj/engine/obj/VShader.h
             src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMeshRenderer.cpp
-            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMeshRenderer.h)
+            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMeshRenderer.h
+            src/GLFW/src/engine/vulkan/vkObj/engine/VEntity.cpp src/GLFW/src/engine/vulkan/vkObj/engine/VEntity.h src/GLFW/src/engine/vulkan/vkObj/engine/VComponent.cpp src/GLFW/src/engine/vulkan/vkObj/engine/VComponent.h src/GLFW/src/engine/vulkan/vkObj/engine/VEntityManager.cpp src/GLFW/src/engine/vulkan/vkObj/engine/VEntityManager.h)
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
