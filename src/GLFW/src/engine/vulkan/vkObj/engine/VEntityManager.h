@@ -11,17 +11,20 @@
 #include <map>
 #include <list>
 #include <type_traits>
+#include <set>
 
 namespace engine {
 
     class VEntityManager {
     private:
         //// private variables
+
+        constexpr static auto compareVComponent = []( const engine::VComponent * pObj1, const engine::VComponent * pObj2 ) constexpr noexcept -> bool { return pObj1->_ID < pObj2->_ID; };
+        std::map        < VEntity::VEntityID, std::set < engine::VComponent *, decltype( engine::VEntityManager::compareVComponent ) > > _entityOwnedComponents;
+        std::map        < VComponent::VComponentID, VEntity * > _componentOwners;
+
         std::list < VComponent * > _activeComponents;
         std::list < VComponent * > _inactiveComponents;
-
-        std::map  < VEntity::VEntityID, VComponent * > _entityOwnedComponents;
-        std::map  < VComponent::VComponentID, VEntity * > _componentOwners;
 
         static VEntityManager _instance;
 
@@ -42,36 +45,43 @@ namespace engine {
         static void clearInactiveComponents ( ) noexcept;
 
         template <class T>
-        [[nodiscard]] static T * getComponent ( const VEntity * = nullptr ) noexcept;
+        [[nodiscard]] static T * getNewComponent ( const VEntity * = nullptr ) noexcept;
 
-        static void assign ( const VComponent *, const VEntity * ) noexcept;
+        static void assign ( VComponent *, VEntity * ) noexcept;
+        static void free ( VComponent *, VEntity * ) noexcept;
+        static void destroy ( VComponent * ) noexcept;
 
     };
 
 }
 
 template <class T>
-[[nodiscard]] T * engine::VEntityManager::getComponent (const VEntity * pParentEntity) noexcept {
+[[nodiscard]] T * engine::VEntityManager::getNewComponent (const VEntity * pParentEntity) noexcept {
     if constexpr ( ! std::is_base_of_v < engine::VComponent , T > )
         return nullptr;
 
-    T * component = new T ();
+    T * pComponent = new T ();
 
     if ( pParentEntity == nullptr )
-        VEntityManager::_instance._inactiveComponents.push_back( component );
+        VEntityManager::_instance._inactiveComponents.push_back(pComponent );
     else {
-        VEntityManager::_instance._activeComponents.push_back( component );
+        VEntityManager::_instance._activeComponents.push_back(pComponent );
         VEntityManager::_instance._componentOwners.emplace(
-                dynamic_cast < VComponent * > ( component )->_ID,
+                reinterpret_cast < VComponent * > ( pComponent )->_ID,
                 pParentEntity
         );
-        VEntityManager::_instance._entityOwnedComponents.emplace(
+
+        auto ownerIterator = VEntityManager::_instance._entityOwnedComponents.find( pParentEntity->_ID );
+        if ( ownerIterator != VEntityManager::_instance._entityOwnedComponents.end() )
+            ownerIterator->second.emplace( reinterpret_cast < VComponent * > ( pComponent ) );
+        else
+            VEntityManager::_instance._entityOwnedComponents.emplace(
                 pParentEntity->_ID,
-                reinterpret_cast < VComponent * > ( component )
-        );
+                std::set < engine::VComponent *, decltype( engine::VEntityManager::compareVComponent ) > ()
+            ).first->second.emplace( reinterpret_cast < VComponent * > ( pComponent ) );
     }
 
-    return component;
+    return pComponent;
 }
 
 
