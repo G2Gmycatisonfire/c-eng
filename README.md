@@ -1,3 +1,8 @@
+### For Game Design 2021 - UAIC FII 
+
+Project Proposal and technical specs : 
+[document](https://github.com/LoghinVladDev/c-eng/blob/master/GD_Loghin_Vlad-Andrei_Engine_ProjectProposal.docx) Project Proposal
+
 ### Introduction
 
 Game Engine Project. Started as a port from a small Java 2D game engine, turned into a 
